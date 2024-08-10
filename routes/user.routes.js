@@ -1,10 +1,10 @@
 const { Router } = require('express');
 
-const userController = require('../controllers/user.controller');
+const coordinateController = require('../controllers/coordinates.controller');
 
 const userRouter = Router();
 
-userRouter.post('/locate-me', userController.locateMe);
-userRouter.get('/coordinates', userController.getCoordinates);
+userRouter.post('/locate-me', coordinateController.locateMe);
+userRouter.get('/coordinates', coordinateController.getCoordinates);
 
 module.exports = { userRouter };

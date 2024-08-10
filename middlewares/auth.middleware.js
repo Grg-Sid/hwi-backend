@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 const authenticateToken = (req, res, next) => {
-
     const cookie = req.headers.cookie;
     if (!cookie) return res.sendStatus(401);
     const token = cookie.split('=')[1];
-    console.log('token:', token);
+    // console.log('token:', token);
     try {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
             if (err) return res.sendStatus(403);

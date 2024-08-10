@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { User, Coordinate } = require('../db/index');
+const { User } = require('../db/index');
 
 const createUser = async (req, res) => {
     const { email, password, firstName, lastName } = req.body;
@@ -68,62 +68,7 @@ const createGovUser = async (req, res) => {
     }
 };
 
-const locateMe = async (req, res) => {
-    try {
-        const user = await User.findById(req.user.id);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        const { latitude, longitude } = req.body;
-
-        const newCoordinate = new Coordinate({
-            user: user._id,
-            latitude: latitude,
-            longitude: longitude,
-        });
-        await newCoordinate.save();
-        user.coordinates.push(newCoordinate);
-        await user.save();
-        return res.status(201).json({ message: 'Coordinates saved' });
-    } catch (error) {
-        console.error('Error locating user:', error);
-        return res.status(500).json({ message: 'Failed to locate user' });
-    }
-};
-
-const getCoordinates = async (req, res) => {
-    try {
-        const user = await User.findById(req.user.id).populate('coordinates');
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        return res.status(200).json(user.coordinates);
-    } catch (error) {
-        console.error('Error locating user:', error);
-        return res.status(500).json({ message: 'Failed to locate user' });
-    }
-};
-
-// const deleteCoordinates = async (req, res) => {
-//     try {
-//         const coordinate_id = req.body.coordinate;
-//         Coordinate.findByIdAndDelete(coordinate_id, function (err, docs) {
-//             if (err) {
-//                 console.log(err);
-//             } else {
-//                 console.log('Deleted : ', docs);
-//             }
-//         });
-//         return res.status(200).json({ message: 'Coordinates deleted' });
-//     } catch (error) {
-//         console.error('Error locating user:', error);
-//         return res.status(500).json({ message: 'Failed to locate user' });
-//     }
-// };
-
 module.exports = {
     createUser,
     createGovUser,
-    locateMe,
-    getCoordinates,
 };

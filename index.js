@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 
 const { authenticateToken } = require('./middlewares/auth.middleware');
 const userController = require('./controllers/user.controller');
@@ -11,6 +12,13 @@ const { govUserRouter } = require('./routes/govUser.routes');
 
 const port = process.env.PORT || 3000;
 const app = express();
+
+const corsOptions = {
+    origin: '*',
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.post('/signup', userController.createUser);
@@ -19,6 +27,7 @@ app.post('/signin', authController.handleLogin);
 app.use(authenticateToken);
 app.use('/admin', adminRouter);
 app.use('/user', userRouter);
+app.use('/gov-user', govUserRouter);
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
