@@ -19,14 +19,10 @@ const handleLogin = async (req, res) => {
 
         const accessToken = generateAccessToken(user);
 
-        res.cookie('accessToken', accessToken, {
-            httpOnly: true,
-            secure: false,
-            sameSite: 'None',
-            maxAge: 24 * 60 * 60 * 1000,
+        res.status(200).json({
+            message: 'Login successful',
+            accessToken,
         });
-
-        res.status(200).json({ message: 'Login successful' });
     } catch (error) {
         console.error(error);
         res.status(400).json({ message: 'Bad request' });
