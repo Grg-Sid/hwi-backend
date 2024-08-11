@@ -25,6 +25,9 @@ app.post('/signup', userController.createUser);
 app.post('/signin', authController.handleLogin);
 
 app.use(authenticateToken);
+app.get('/signout', authController.handleLogout);
+app.get('/me', userController.getUser);
+
 app.use('/admin', adminRouter);
 app.use('/user', userRouter);
 app.use('/gov', govUserRouter);
