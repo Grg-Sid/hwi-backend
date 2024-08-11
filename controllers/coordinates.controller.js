@@ -1,21 +1,30 @@
 const { User, Coordinate } = require('../db/index');
+const { findNearbyCoordinates } = require('../utils/geoUtils');
 
 const locateMe = async (req, res) => {
     const { latitude, longitude } = req.body;
+    const user = await User.findById(req.user.id);
     if (!latitude || !longitude) {
         return res
             .status(400)
             .json({ message: 'latitude and longitude are required' });
     }
+
+    const nearbyCoordinate = await findNearbyCoordinates(latitude, longitude);
+    if (nearbyCoordinate) {
+        return res.status(200).json({
+            message: 'You are near a coordinate',
+            // nearbyCoordinate,
+        });
+    }
+
     try {
-        const user = await User.findById(req.user._id);
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
         const newCoordinate = new Coordinate({
-            user: req.user._id,
-            latitude: latitude,
-            longitude: longitude,
+            user: user._id,
+            location: {
+                type: 'Point',
+                coordinates: [longitude, latitude],
+            },
         });
         await newCoordinate.save();
         user.coordinates.push(newCoordinate);
@@ -30,7 +39,7 @@ const locateMe = async (req, res) => {
 
 const getCoordinates = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id).populate('coordinates');
+        const user = await User.findById(req.user.id).populate('coordinates');
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -42,6 +51,7 @@ const getCoordinates = async (req, res) => {
 };
 
 const resolveCoordinate = async (req, res) => {
+    console.log('here!!!');
     try {
         const { id } = req.params;
         const coordinate = await Coordinate.findById(id);

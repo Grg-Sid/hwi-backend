@@ -5,11 +5,11 @@ const coordinateController = require('../controllers/coordinates.controller');
 
 const govUserRouter = Router();
 
-govUserRouter.post(
-    'resolve-coordinate/:id',
-    verifyRole('gov-user'),
+govUserRouter.get(
+    '/resolve-coordinate/:id',
+    verifyRole('gov'),
     coordinateController.resolveCoordinate
 );
-govUserRouter.get('/coordinates', coordinateController.getCoordinates);
+govUserRouter.get('/coordinates', coordinateController.getAllCoordinates);
 
 module.exports = { govUserRouter };
