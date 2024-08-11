@@ -13,12 +13,15 @@ const { govUserRouter } = require('./routes/govUser.routes');
 const port = process.env.PORT || 3000;
 const app = express();
 
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5173/'];
+
 const corsOptions = {
-    origin: '*',
+    origin: 'http://localhost:5173',
     credentials: true,
 };
 
 app.use(cors(corsOptions));
+
 app.use(express.json());
 
 app.post('/signup', userController.createUser);

@@ -70,7 +70,7 @@ const createGovUser = async (req, res) => {
 
 const getUser = async (req, res) => {
     try {
-        console.log('req.user:', req.user);
+        console.log('req.user: in getUser', req.user);
         const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
