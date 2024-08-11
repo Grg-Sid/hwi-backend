@@ -24,7 +24,7 @@ const locateMe = async (req, res) => {
     }
 
     try {
-        console.log('Sending email to:', user.firstName);
+        // console.log('Sending email to:', user.firstName);
         const newCoordinate = new Coordinate({
             user: user._id,
             location: {
@@ -75,7 +75,7 @@ const getCoordinates = async (req, res) => {
 };
 
 const resolveCoordinate = async (req, res) => {
-    console.log('here!!!');
+    // console.log('here!!!');
     try {
         const { id } = req.params;
         const coordinate = await Coordinate.findById(id);

@@ -27,6 +27,7 @@ app.post('/signin', authController.handleLogin);
 app.use(authenticateToken);
 app.get('/signout', authController.handleLogout);
 app.get('/me', userController.getUser);
+app.get('/get-role', userController.getRole);
 
 app.use('/admin', adminRouter);
 app.use('/user', userRouter);

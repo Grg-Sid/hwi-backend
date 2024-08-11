@@ -70,7 +70,7 @@ const createGovUser = async (req, res) => {
 
 const getUser = async (req, res) => {
     try {
-        console.log('req.user: in getUser', req.user);
+        // console.log('req.user: in getUser', req.user);
         const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -82,8 +82,22 @@ const getUser = async (req, res) => {
     }
 };
 
+const getRole = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        return res.status(200).json({ role: user.role });
+    } catch (error) {
+        console.error('Error getting role:', error);
+        return res.status(500).json({ message: 'Failed to get role' });
+    }
+};
+
 module.exports = {
     createUser,
     createGovUser,
     getUser,
+    getRole,
 };

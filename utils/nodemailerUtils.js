@@ -129,7 +129,7 @@ const generateGovEmailContent = (name, email, longitude, latitude) =>
 `;
 
 const sendEmail = (to, subject, text, html = '') => {
-    console.log('Sending email to:', to);
+    // console.log('Sending email to:', to);
     const mailOptions = {
         from: process.env.SMTP_PASSWORD,
         to,
