@@ -1,5 +1,10 @@
 const { User, Coordinate } = require('../db/index');
 const { findNearbyCoordinates } = require('../utils/geoUtils');
+const {
+    sendEmail,
+    generateEmailContent,
+    generateGovEmailContent,
+} = require('../utils/nodemailerUtils');
 
 const locateMe = async (req, res) => {
     const { latitude, longitude } = req.body;
@@ -19,6 +24,7 @@ const locateMe = async (req, res) => {
     }
 
     try {
+        console.log('Sending email to:', user.firstName);
         const newCoordinate = new Coordinate({
             user: user._id,
             location: {
@@ -29,6 +35,24 @@ const locateMe = async (req, res) => {
         await newCoordinate.save();
         user.coordinates.push(newCoordinate);
         await user.save();
+
+        // sending email to user
+        let htmlContent = generateEmailContent(user.firstName);
+        sendEmail(user.email, 'Thank you for your feedback', '', htmlContent);
+
+        // sending email to civic body
+        let civicHtmlContent = generateGovEmailContent(
+            user.firstName,
+            user.email,
+            latitude,
+            longitude
+        );
+        sendEmail(
+            'bhargavrathod2425@gmail.com',
+            'Garbage Issue Report',
+            '',
+            civicHtmlContent
+        );
 
         return res.status(201).json({ message: 'Coordinate saved' });
     } catch (error) {
